@@ -1,7 +1,19 @@
 <template>
 	<modal title="Pedido" v-model="openedModal" size="80%">
 		<order-modal-header :order.sync="order" />
-		<table-products :order.sync="order" class="q-mt-lg" />
+		<table-products
+			class="q-mt-lg"
+			:order.sync="order"
+			:order_summary="order_summary"
+		/>
+		<installment-modal
+			ref="installmentMd"
+			:order.sync="order"
+			:order_summary="order_summary"
+		/>
+		<template v-slot:actions>
+			<actions @openInstMd="$refs.installmentMd.open()" :order="order" />
+		</template>
 	</modal>
 </template>
 <script>
@@ -10,14 +22,42 @@
 	import TableProducts from './components/table-products'
 	import order from './order'
 	import { clone } from 'lodash'
+	import InstallmentModal from './components/installment-modal'
+	import Actions from './components/actions'
 
 	export default {
-		components: { Modal, orderModalHeader, TableProducts },
+		components: {
+			Modal,
+			orderModalHeader,
+			TableProducts,
+			InstallmentModal,
+			Actions,
+		},
 		data() {
 			return {
 				openedModal: false,
 				order: clone(order),
 			}
+		},
+		computed: {
+			order_summary() {
+				const total_products = parseFloat(
+					this.order.products.reduce(
+						(sbTot, { price, qnt }) => sbTot + price * qnt,
+						0
+					)
+				)
+
+				const shipping = !this.order.shipping
+					? 0
+					: parseFloat(this.order.shipping)
+
+				return {
+					total_products,
+					shipping,
+					total: total_products + shipping,
+				}
+			},
 		},
 		methods: {
 			open(data = null) {

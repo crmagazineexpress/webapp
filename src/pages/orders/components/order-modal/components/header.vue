@@ -65,6 +65,14 @@
 					</template>
 				</q-input>
 			</div>
+			<div class="col-12">
+				<q-input
+					filled
+					label="Observações"
+					v-model="_order.obs"
+					autogrow
+				/>
+			</div>
 		</div>
 	</header>
 </template>

@@ -32,17 +32,17 @@
 				<b>Sub total</b>
 			</div>
 			<div class="col q-py-sm text-center" style="width: 150px">
-				<b>{{ money(sub_total) }}</b>
+				<b>{{ money(order_summary.total_products) }}</b>
 			</div>
 		</div>
 		<div class="clear"></div>
-		<template v-if="shipping > 0">
+		<template v-if="order_summary.shipping > 0">
 			<div class="resumo row">
 				<div class="col text-right q-pa-sm">
 					<b>Frete</b>
 				</div>
 				<div class="col q-py-sm text-center" style="width: 150px">
-					<b>{{ money(shipping) }}</b>
+					<b>{{ money(order_summary.shipping) }}</b>
 				</div>
 			</div>
 			<div class="clear"></div>
@@ -52,7 +52,7 @@
 				<b>Total</b>
 			</div>
 			<div class="col q-py-sm text-center" style="width: 150px">
-				<b>{{ money(sub_total + shipping) }}</b>
+				<b>{{ money(order_summary.total) }}</b>
 			</div>
 		</div>
 		<div class="clear"></div>
@@ -73,6 +73,10 @@
 			order: {
 				type: Object,
 				default: () => defaultOrder,
+			},
+			order_summary: {
+				type: Object,
+				default: () => {},
 			},
 		},
 		data() {
@@ -111,14 +115,6 @@
 			}
 		},
 		computed: {
-			sub_total() {
-				return parseFloat(
-					this.data.reduce(
-						(sbTot, { price, qnt }) => sbTot + price * qnt,
-						0
-					)
-				)
-			},
 			data: {
 				get() {
 					return this.order.products
@@ -126,11 +122,6 @@
 				set(products) {
 					this.$emit('update:order', { ...this.order, products })
 				},
-			},
-			shipping() {
-				return !this.order.shipping
-					? 0
-					: parseFloat(this.order.shipping)
 			},
 		},
 		methods: {

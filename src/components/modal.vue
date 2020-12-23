@@ -9,25 +9,33 @@
 			<q-card-section style="background: rgb(248 248 248)">
 				<slot />
 			</q-card-section>
-			<q-card-actions align="right" class="q-pa-md">
-				<q-btn
-					icon="close"
-					:disable="loading"
-					flat
-					label="Cancelar"
-					color="grey"
-					class="q-pr-sm"
-					v-close-popup
-				/>
-				<q-btn
-					icon="save"
-					class="q-pr-sm"
-					:disable="loading"
-					:loading="loading"
-					label="Salvar"
-					color="primary"
-					@click="save"
-				/>
+			<q-card-actions align="right">
+				<slot name="actions">
+					<div class="row q-col-gutter-md q-pa-sm cnt-actions-modal">
+						<div class="col-6">
+							<q-btn
+								icon="close"
+								:disable="loading"
+								flat
+								label="Cancelar"
+								color="grey"
+								class="full-width"
+								v-close-popup
+							/>
+						</div>
+						<div class="col-6">
+							<q-btn
+								icon="save"
+								class="full-width"
+								:disable="loading"
+								:loading="loading"
+								label="Salvar"
+								color="primary"
+								@click="save"
+							/>
+						</div>
+					</div>
+				</slot>
 			</q-card-actions>
 		</q-card>
 	</q-dialog>
@@ -68,4 +76,8 @@
 	}
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+	.cnt-actions-modal {
+		width: 318px;
+	}
+</style>
