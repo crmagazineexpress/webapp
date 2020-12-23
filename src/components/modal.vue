@@ -1,6 +1,6 @@
 <template>
 	<q-dialog :value="value" @input="$emit('input', $event)" persistent>
-		<q-card :style="{ maxWidth: `${size}px`, width: `${size}px` }">
+		<q-card :style="{ maxWidth: size, width: size }">
 			<q-card-section class="row items-center">
 				<div class="text-h6">{{ title }}</div>
 				<q-space />
@@ -49,8 +49,8 @@
 				type: String,
 			},
 			size: {
-				type: Number,
-				default: 600,
+				type: String,
+				default: '600px',
 			},
 		},
 		methods: {

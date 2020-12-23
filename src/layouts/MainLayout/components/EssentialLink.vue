@@ -1,5 +1,5 @@
 <template>
-	<q-item :to="link">
+	<q-item :to="link" exact>
 		<q-item-section v-if="icon" avatar>
 			<q-icon :name="icon" size="20px" color="primary" />
 		</q-item-section>

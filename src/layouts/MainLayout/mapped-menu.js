@@ -14,16 +14,16 @@ export default [
 		icon: 'fas fa-users',
 		link: '/clientes',
 	},
-	{
-		title: 'Formas de pagamento',
-		icon: 'fas fa-credit-card',
-		link: '/formas-de-pagamento',
-	},
-	{
-		title: 'Estoque',
-		icon: 'fas fa-boxes',
-		link: '/estoque',
-	},
+	// {
+	// 	title: 'Formas de pagamento',
+	// 	icon: 'fas fa-credit-card',
+	// 	link: '/formas-de-pagamento',
+	// },
+	// {
+	// 	title: 'Estoque',
+	// 	icon: 'fas fa-boxes',
+	// 	link: '/estoque',
+	// },
 	{
 		title: 'Carnês',
 		icon: 'fas fa-file-invoice-dollar',
