@@ -42,7 +42,14 @@
 		</template>
 
 		<template v-slot:after>
-			<q-btn round dense flat icon="add" @click="emitProduct" />
+			<q-btn
+				round
+				:disable="!model"
+				dense
+				flat
+				icon="add"
+				@click="emitProduct"
+			/>
 		</template>
 	</q-select>
 </template>

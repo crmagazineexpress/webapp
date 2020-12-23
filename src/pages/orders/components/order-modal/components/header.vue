@@ -1,7 +1,7 @@
 <template>
 	<header>
 		<div class="row q-col-gutter-md">
-			<div class="col-7">
+			<div class="col-5">
 				<q-select
 					label="Cliente"
 					:options="customersOptions"
@@ -9,16 +9,16 @@
 					map-options
 					option-value="_id"
 					option-label="nome"
-					:use-input="!order.customer"
+					:use-input="!_order.customer"
 					@filter="filterFn"
-					v-model="order.customer"
+					v-model="_order.customer"
 				>
 					<template v-slot:append>
 						<q-icon
-							v-if="order.customer !== null"
+							v-if="_order.customer !== null"
 							class="cursor-pointer"
 							name="clear"
-							@click.stop="order.customer = null"
+							@click.stop="_order.customer = null"
 						/>
 					</template>
 				</q-select>
@@ -31,15 +31,39 @@
 					map-options
 					option-value="id"
 					option-label="name"
-					v-model="order.payment_method"
+					v-model="_order.payment_method"
 				/>
 			</div>
 			<div class="col">
 				<q-input
 					label="Data da compra"
 					type="date"
-					v-model="order.date"
+					v-model="_order.date"
 				/>
+			</div>
+			<div class="co-2">
+				<q-input
+					label="Frete"
+					mask="#.##"
+					reverse-fill-mask
+					v-model="_order.shipping"
+				>
+					<template v-slot:prepend>
+						<q-icon name="local_shipping" />
+					</template>
+					<template
+						v-slot:control="{ id, floatingLabel, value, emitValue }"
+					>
+						<input
+							:id="id"
+							class="q-field__input text-right"
+							:value="value"
+							@change="(e) => emitValue(e.target.value)"
+							v-money="MoneyFormatForDirective"
+							v-show="floatingLabel"
+						/>
+					</template>
+				</q-input>
 			</div>
 		</div>
 	</header>
@@ -47,21 +71,39 @@
 
 <script>
 	import PaymentMethods from 'src/assets/payment-methods'
+	import MoneyFormatForDirective from 'src/assets/money-format-for-directive'
+	import defaultOrder from '../order'
+
 	export default {
 		inject: ['getAssets'],
+		props: {
+			order: {
+				type: Object,
+				default: () => defaultOrder,
+			},
+		},
 		data() {
 			return {
 				PaymentMethods,
+				MoneyFormatForDirective,
 				customersOptions: [],
-
-				order: {
-					customer: null,
-					payment_method: 'debit-card',
-					date: new Date(),
-				},
 			}
 		},
+		computed: {
+			_order: {
+				get() {
+					return this.order
+				},
+				set(v) {
+					this.$emit('update:order', v)
+				},
+			},
+		},
 		methods: {
+			getShippingValue() {
+				if (!this.order.shipping) return 0
+				return this.order.shipping
+			},
 			filterFn(val, update) {
 				if (val === '') {
 					update(() => {

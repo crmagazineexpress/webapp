@@ -27,12 +27,32 @@
 			</template>
 		</q-table>
 
-		<div class="resumo row">
-			<div class="col text-right q-pa-md">
+		<div class="resumo row q-pt-sm">
+			<div class="col text-right q-pa-sm">
 				<b>Sub total</b>
 			</div>
-			<div class="col q-py-md text-center" style="width: 150px">
+			<div class="col q-py-sm text-center" style="width: 150px">
 				<b>{{ money(sub_total) }}</b>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<template v-if="shipping > 0">
+			<div class="resumo row">
+				<div class="col text-right q-pa-sm">
+					<b>Frete</b>
+				</div>
+				<div class="col q-py-sm text-center" style="width: 150px">
+					<b>{{ money(shipping) }}</b>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</template>
+		<div class="resumo lined row">
+			<div class="col text-right q-pa-sm">
+				<b>Total</b>
+			</div>
+			<div class="col q-py-sm text-center" style="width: 150px">
+				<b>{{ money(sub_total + shipping) }}</b>
 			</div>
 		</div>
 		<div class="clear"></div>
@@ -40,13 +60,20 @@
 </template>
 
 <script>
-	import addProductsInput from './add-products-input'
-	import ManageQntInput from './manage-qnt-input'
+	import addProductsInput from './components/add-products-input'
+	import ManageQntInput from './components/manage-qnt-input'
+	import defaultOrder from '../../order'
 
 	export default {
 		components: {
 			addProductsInput,
 			ManageQntInput,
+		},
+		props: {
+			order: {
+				type: Object,
+				default: () => defaultOrder,
+			},
 		},
 		data() {
 			return {
@@ -80,16 +107,30 @@
 						align: 'center',
 					},
 				],
-				data: [],
 				$wooApi: null,
 			}
 		},
 		computed: {
 			sub_total() {
-				return this.data.reduce(
-					(sbTot, { price, qnt }) => sbTot + price * qnt,
-					0
+				return parseFloat(
+					this.data.reduce(
+						(sbTot, { price, qnt }) => sbTot + price * qnt,
+						0
+					)
 				)
+			},
+			data: {
+				get() {
+					return this.order.products
+				},
+				set(products) {
+					this.$emit('update:order', { ...this.order, products })
+				},
+			},
+			shipping() {
+				return !this.order.shipping
+					? 0
+					: parseFloat(this.order.shipping)
 			},
 		},
 		methods: {
@@ -110,6 +151,9 @@
 </script>
 
 <style lang="scss">
+	.lined {
+		border-top: 1px solid #cecece;
+	}
 	.clear {
 		clear: both;
 	}

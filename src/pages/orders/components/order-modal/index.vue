@@ -1,24 +1,28 @@
 <template>
 	<modal title="Pedido" v-model="openedModal" size="80%">
-		<order-modal-header />
-
-		<table-products class="q-mt-lg" />
+		<order-modal-header :order.sync="order" />
+		<table-products :order.sync="order" class="q-mt-lg" />
 	</modal>
 </template>
 <script>
 	import Modal from 'src/components/modal'
 	import orderModalHeader from './components/header'
-	import TableProducts from './components/products'
+	import TableProducts from './components/table-products'
+	import order from './order'
+	import { clone } from 'lodash'
 
 	export default {
 		components: { Modal, orderModalHeader, TableProducts },
 		data() {
 			return {
 				openedModal: false,
+				order: clone(order),
 			}
 		},
 		methods: {
-			open() {
+			open(data = null) {
+				if (!data) this.order = clone(order)
+				else this.order = clone(data)
 				this.openedModal = true
 			},
 			filterFn(val, update) {
