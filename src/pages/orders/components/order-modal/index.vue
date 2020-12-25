@@ -12,7 +12,10 @@
 			:order_summary="order_summary"
 		/>
 		<template v-slot:actions>
-			<actions :openInstMd="$refs.installmentMd.open" :order="order" />
+			<actions
+				:openInstMd="(ev) => $refs.installmentMd.open(ev)"
+				:order="order"
+			/>
 		</template>
 	</modal>
 </template>

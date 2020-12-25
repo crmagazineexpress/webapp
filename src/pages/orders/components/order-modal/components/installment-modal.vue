@@ -2,16 +2,8 @@
 	<modal v-model="statusModal" title="Parcelamento" :desc="method_rules.name">
 		<div class="q-pb-sm">
 			<div class="row q-col-gutter-md">
-				<div class="col-8">
-					<span>Quantidade de parcelas ({{ installment }})</span>
-					<q-slider
-						v-model="installment"
-						markers
-						:min="1"
-						:max="method_rules.max_instalments"
-					/>
-				</div>
-				<div class="col">
+				<div class="col"></div>
+				<div class="col-4">
 					<q-input
 						label="Primeira parcela"
 						type="date"
@@ -28,10 +20,11 @@
 			:pagination="{ rowsPerPage: method_rules.max_instalments }"
 			dense
 			hide-bottom
-			row-key="n"
+			row-key="installments"
 			binary-state-sort
+			selection="single"
+			:selected.sync="installment"
 		/>
-		<!-- <pre>{{ mount_installment }}</pre> -->
 		<div class="row q-col-gutter-md q-pt-lg">
 			<div class="col">
 				<q-input
@@ -90,25 +83,15 @@
 		data() {
 			return {
 				statusModal: false,
-				installment: 1,
+				installment: [],
 				total_installment: 0,
 				frist_istallment: new Date().toISOString().slice(0, 10),
 				MoneyFormatForDirective,
 				columns: [
 					{
 						name: 'installment',
-						label: 'Nº',
-						field: 'n',
-						align: 'right',
-					},
-					{
-						name: 'date',
-						label: 'Data',
-						field: 'date',
-						format: (v) =>
-							new Date(`${v}T00:00`)
-								.toLocaleString()
-								.slice(0, 10),
+						label: 'Nº Parc.',
+						field: 'installments',
 						align: 'center',
 					},
 					{
@@ -116,6 +99,16 @@
 						label: 'Valor da parcela',
 						field: 'value',
 						format: (v) => money(v),
+						align: 'left',
+					},
+					{
+						name: 'date',
+						label: 'Útima parcela',
+						field: 'date',
+						format: (v) =>
+							new Date(`${v}T00:00`)
+								.toLocaleString()
+								.slice(0, 10),
 						align: 'left',
 					},
 				],
@@ -128,16 +121,29 @@
 				)
 			},
 			mount_installment() {
-				const installments = []
-				const value = this.total_installment / this.installment
+				const installmentsOptions = []
 
-				for (let n = 1; n <= this.installment; n++) {
+				for (
+					let installments = 1;
+					installments <= this.method_rules.max_instalments;
+					installments++
+				) {
+					const value = parseFloat(
+						this.total_installment / installments
+					).toFixed(2)
+
 					let date = new Date(`${this.frist_istallment}T00:00`)
-					date.setMonth(date.getMonth() + (n - 1))
+					date.setMonth(date.getMonth() + (installments - 1))
 					date = date.toISOString().slice(0, 10)
-					installments.push({ n, date, value, paid: false })
+
+					installmentsOptions.push({
+						installments,
+						value,
+						date,
+						paid: false,
+					})
 				}
-				return installments
+				return installmentsOptions
 			},
 		},
 		methods: {
