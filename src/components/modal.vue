@@ -2,7 +2,10 @@
 	<q-dialog :value="value" @input="$emit('input', $event)" persistent>
 		<q-card :style="{ maxWidth: size, width: size }">
 			<q-card-section class="row items-center">
-				<div class="text-h6">{{ title }}</div>
+				<div class="text-h6 title">
+					{{ title }}
+					<small v-if="desc">{{ desc }}</small>
+				</div>
 				<q-space />
 				<q-btn icon="close" flat round dense v-close-popup />
 			</q-card-section>
@@ -56,6 +59,10 @@
 			title: {
 				type: String,
 			},
+			desc: {
+				type: [String, null],
+				default: null,
+			},
 			size: {
 				type: String,
 				default: '600px',
@@ -77,6 +84,15 @@
 </script>
 
 <style lang="scss" scoped>
+	.title {
+		small {
+			display: block;
+			margin-top: -2px;
+			font-size: 12px;
+			line-height: 12px;
+			color: #828282;
+		}
+	}
 	.cnt-actions-modal {
 		width: 318px;
 	}

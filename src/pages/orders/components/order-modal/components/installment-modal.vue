@@ -2,7 +2,7 @@
 	<modal v-model="statusModal" title="Parcelamento" :desc="method_rules.name">
 		<div class="q-pb-sm">
 			<div class="row q-col-gutter-md">
-				<div class="col-9">
+				<div class="col-8">
 					<span>Quantidade de parcelas ({{ installment }})</span>
 					<q-slider
 						v-model="installment"
@@ -13,11 +13,10 @@
 				</div>
 				<div class="col">
 					<q-input
-						label="Taxa (%)"
+						label="Primeira parcela"
+						type="date"
 						dense
-						:value="method_rules.rate * 100"
-						@input="method_rules.rate = $event / 100"
-						type="number"
+						v-model="frist_istallment"
 					/>
 				</div>
 			</div>
@@ -44,20 +43,25 @@
 			</div>
 			<div class="col">
 				<q-input
-					:value="total_installment | money"
-					standout
-					readonly
-					label="Total parcelado"
-					@change="setRate"
-				/>
-			</div>
-			<div class="col">
-				<q-input
-					:value="(total_installment - order_summary.total) | money"
-					standout
-					readonly
-					label="Juros"
-				/>
+					filled
+					mask="#.##"
+					reverse-fill-mask
+					label="Total parcelado (R$)"
+					v-model="total_installment"
+				>
+					<template
+						v-slot:control="{ id, floatingLabel, value, emitValue }"
+					>
+						<input
+							:id="id"
+							class="q-field__input text-right"
+							:value="value"
+							@change="(e) => emitValue(e.target.value)"
+							v-money="MoneyFormatForDirective"
+							v-show="floatingLabel"
+						/>
+					</template>
+				</q-input>
 			</div>
 		</div>
 	</modal>
@@ -68,6 +72,7 @@
 	import defaultOrder from '../order'
 	import paymentMethods from 'src/assets/payment-methods'
 	import { FilterMoney, money } from 'src/assets/helpers'
+	import MoneyFormatForDirective from 'src/assets/money-format-for-directive'
 
 	export default {
 		components: { modal },
@@ -86,6 +91,9 @@
 			return {
 				statusModal: false,
 				installment: 1,
+				total_installment: 0,
+				frist_istallment: new Date().toISOString().slice(0, 10),
+				MoneyFormatForDirective,
 				columns: [
 					{
 						name: 'installment',
@@ -94,10 +102,13 @@
 						align: 'right',
 					},
 					{
-						name: 'rated',
-						label: 'Juros no mês',
-						field: 'rated',
-						format: (v) => money(v),
+						name: 'date',
+						label: 'Data',
+						field: 'date',
+						format: (v) =>
+							new Date(`${v}T00:00`)
+								.toLocaleString()
+								.slice(0, 10),
 						align: 'center',
 					},
 					{
@@ -118,28 +129,26 @@
 			},
 			mount_installment() {
 				const installments = []
-				const { rate } = this.method_rules
-				const { total } = this.order_summary
-				const rated = total * rate
+				const value = this.total_installment / this.installment
+
 				for (let n = 1; n <= this.installment; n++) {
-					const value = total / this.installment + rated
-					installments.push({ n, rate, rated, value, paid: false })
+					let date = new Date(`${this.frist_istallment}T00:00`)
+					date.setMonth(date.getMonth() + (n - 1))
+					date = date.toISOString().slice(0, 10)
+					installments.push({ n, date, value, paid: false })
 				}
 				return installments
 			},
-			total_installment() {
-				return this.mount_installment.reduce(
-					(total, { value }) => total + value,
-					0
-				)
-			},
 		},
 		methods: {
-			setRate(ev) {
-				console.log(ev.target.value)
-			},
 			open() {
 				this.statusModal = true
+				const ratedValue =
+					this.order_summary.total * this.method_rules.rate
+
+				this.total_installment = parseFloat(
+					Math.round(ratedValue + this.order_summary.total)
+				).toFixed(2)
 			},
 		},
 	}
