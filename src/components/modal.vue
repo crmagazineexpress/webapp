@@ -7,7 +7,7 @@
 					<small v-if="desc">{{ desc }}</small>
 				</div>
 				<q-space />
-				<q-btn icon="close" flat round dense v-close-popup />
+				<q-btn icon="close" flat round dense @click="closeModal" />
 			</q-card-section>
 			<q-card-section style="background: rgb(248 248 248)">
 				<slot />
@@ -23,14 +23,14 @@
 								label="Cancelar"
 								color="grey"
 								class="full-width"
-								v-close-popup
+								@click="closeModal"
 							/>
 						</div>
 						<div class="col-6">
 							<q-btn
 								icon="save"
 								class="full-width"
-								:disable="loading"
+								:disable="loading || disableSaveBtn"
 								:loading="loading"
 								label="Salvar"
 								color="primary"
@@ -67,6 +67,10 @@
 				type: String,
 				default: '600px',
 			},
+			disableSaveBtn: {
+				type: Boolean,
+				default: false,
+			},
 		},
 		methods: {
 			async save() {
@@ -77,7 +81,11 @@
 
 				const closeModal = await loading
 				this.loading = false
-				if (closeModal) this.$emit('input', false)
+				if (closeModal) this.closeModal()
+			},
+			closeModal() {
+				this.$emit('input', false)
+				this.$emit('closed')
 			},
 		},
 	}

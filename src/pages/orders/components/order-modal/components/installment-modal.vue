@@ -1,5 +1,12 @@
 <template>
-	<modal v-model="statusModal" title="Parcelamento" :desc="method_rules.name">
+	<modal
+		v-model="statusModal"
+		title="Parcelamento"
+		:desc="method_rules.name"
+		:disable-save-btn="installment.length == 0"
+		@closed="reject()"
+		@save="makeInstallments"
+	>
 		<div class="q-pb-sm">
 			<div class="row q-col-gutter-md">
 				<div class="col"></div>
@@ -13,8 +20,8 @@
 				</div>
 			</div>
 		</div>
-		<span>Configuração das parcelas</span>
 		<q-table
+			title="Opções de parcelamento"
 			:columns="columns"
 			:data="mount_installment"
 			:pagination="{ rowsPerPage: method_rules.max_instalments }"
@@ -82,6 +89,8 @@
 		},
 		data() {
 			return {
+				resolve: null,
+				reject: null,
 				statusModal: false,
 				installment: [],
 				total_installment: 0,
@@ -92,7 +101,8 @@
 						name: 'installment',
 						label: 'Nº Parc.',
 						field: 'installments',
-						align: 'center',
+						format: (v) => `${v}x`,
+						align: 'right',
 					},
 					{
 						name: 'value',
@@ -132,29 +142,62 @@
 						this.total_installment / installments
 					).toFixed(2)
 
-					let date = new Date(`${this.frist_istallment}T00:00`)
-					date.setMonth(date.getMonth() + (installments - 1))
-					date = date.toISOString().slice(0, 10)
+					const date = this.calc_date(installments)
 
 					installmentsOptions.push({
 						installments,
 						value,
 						date,
-						paid: false,
 					})
 				}
 				return installmentsOptions
 			},
 		},
 		methods: {
+			calc_date(installments) {
+				let date = new Date(`${this.frist_istallment}T00:00`)
+				date.setMonth(date.getMonth() + (installments - 1))
+				return date.toISOString().slice(0, 10)
+			},
 			open() {
-				this.statusModal = true
-				const ratedValue =
-					this.order_summary.total * this.method_rules.rate
+				return new Promise((resolve, reject) => {
+					this.statusModal = true
+					const ratedValue =
+						this.order_summary.total * this.method_rules.rate
 
-				this.total_installment = parseFloat(
-					Math.round(ratedValue + this.order_summary.total)
-				).toFixed(2)
+					this.total_installment = parseFloat(
+						Math.round(ratedValue + this.order_summary.total)
+					).toFixed(2)
+
+					this.resolve = resolve
+					this.reject = reject
+				})
+			},
+			makeInstallments(resolve) {
+				if (this.installment.length == 0) return resolve()
+
+				const installments = []
+				const [selected] = this.installment
+				const { value } = selected
+
+				for (
+					let installment = 1;
+					installment <= selected.installments;
+					installment++
+				) {
+					const date = this.calc_date(installment)
+					installments.push({ value, installment, date, paid: false })
+				}
+
+				const { total_installment } = this
+				this.resolve({
+					installments,
+					number_instalments: selected.installments,
+					installment_value: value,
+					total_value_installmented: total_installment,
+				})
+				this.statusModal = false
+				resolve()
 			},
 		},
 	}

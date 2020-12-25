@@ -49,17 +49,21 @@
 			},
 		},
 		methods: {
-			saveHanddle() {
-				console.log(this.order)
+			saveHanddle(installments) {
+				const saveData = { ...this.order, installments }
+				console.log(saveData)
 			},
 			async makeOrder() {
-				const { open_installment_modal } = PaymentMethods.find(
-					({ id }) => id == this.order.payment_method
-				)
-				if (open_installment_modal) {
-					await this.openInstMd()
-				}
-				await this.saveHanddle()
+				try {
+					let installments = null
+					const { open_installment_modal } = PaymentMethods.find(
+						({ id }) => id == this.order.payment_method
+					)
+					if (open_installment_modal)
+						installments = await this.openInstMd()
+
+					await this.saveHanddle(installments)
+				} catch (error) {}
 			},
 			async save() {
 				try {
