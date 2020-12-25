@@ -9,7 +9,8 @@
 				color="primary"
 				icon="done"
 				class="full-width"
-				:disable="!is_valid"
+				:disable="!is_valid || loadingSaveBtn"
+				:loading="loadingSaveBtn"
 				@click="save"
 			/>
 		</div>
@@ -41,6 +42,11 @@
 				default: () => {},
 			},
 		},
+		data() {
+			return {
+				loadingSaveBtn: false,
+			}
+		},
 		computed: {
 			is_valid() {
 				const has_customer = !!this.order.customer
@@ -49,9 +55,17 @@
 			},
 		},
 		methods: {
-			saveHanddle(installments) {
-				const saveData = { ...this.order, installments }
-				console.log(saveData)
+			async saveHanddle(
+				createOrderAt = null,
+				installments_options = null
+			) {
+				const saveData = {
+					...this.order,
+					installments_options,
+					createOrderAt,
+				}
+				const { data: _id } = await this.$axios.post('/order', saveData)
+				return { ...saveData, _id }
 			},
 			async makeOrder() {
 				try {
@@ -62,13 +76,20 @@
 					if (open_installment_modal)
 						installments = await this.openInstMd()
 
-					await this.saveHanddle(installments)
+					await this.saveHanddle(new Date(), installments)
+					this.$emit('close')
 				} catch (error) {}
 			},
 			async save() {
 				try {
-					await this.saveHanddle()
-				} catch (error) {}
+					this.loadingSaveBtn = true
+					const order = await this.saveHanddle()
+					this.$emit('update:order', order)
+					this.loadingSaveBtn = false
+				} catch (error) {
+					console.log(error)
+					this.loadingSaveBtn = false
+				}
 			},
 		},
 	}

@@ -11,10 +11,12 @@
 			:order.sync="order"
 			:order_summary="order_summary"
 		/>
+		<!-- <pre>{{ order }}</pre> -->
 		<template v-slot:actions>
 			<actions
 				:openInstMd="(ev) => $refs.installmentMd.open(ev)"
-				:order="order"
+				:order.sync="order"
+				@close="openedModal = false"
 			/>
 		</template>
 	</modal>
