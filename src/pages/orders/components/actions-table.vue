@@ -8,7 +8,16 @@
 			round
 			size="sm"
 		/>
-		<q-btn flat icon="far fa-trash-alt" round color="negative" size="sm" />
+		<q-btn
+			:disable="loading"
+			:loading="loading"
+			flat
+			icon="far fa-trash-alt"
+			round
+			color="negative"
+			size="sm"
+			@click="deleteOrder"
+		/>
 	</q-td>
 </template>
 
@@ -18,6 +27,24 @@
 			props: Object,
 			row: Object,
 			openModal: Function,
+		},
+		inject: ['loadData'],
+		data() {
+			return {
+				loading: false,
+			}
+		},
+		methods: {
+			async deleteOrder() {
+				try {
+					this.loading = true
+					const { status } = await this.$axios.delete(
+						`/order/${this.row._id}`
+					)
+					await this.loadData()
+					this.loading = false
+				} catch (error) {}
+			},
 		},
 	}
 </script>

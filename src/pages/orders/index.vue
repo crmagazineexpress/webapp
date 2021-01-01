@@ -95,6 +95,7 @@
 		provide() {
 			return {
 				getAssets: () => this.assets,
+				loadData: this.loadDataHandler,
 			}
 		},
 		methods: {
@@ -104,17 +105,16 @@
 					this.assets.customers = customers.data
 				} catch (error) {}
 			},
-			async loadData() {
+			async loadDataHandler() {
 				try {
 					const { data } = await this.$axios.get('/order')
-					console.log(data)
 					this.list = data
 				} catch (error) {}
 			},
 		},
 		mounted() {
 			this.loadAssets()
-			this.loadData()
+			this.loadDataHandler()
 		},
 	}
 </script>

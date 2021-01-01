@@ -42,11 +42,13 @@
 				default: () => {},
 			},
 		},
+		inject: ['loadData'],
 		data() {
 			return {
 				loadingSaveBtn: false,
 			}
 		},
+
 		computed: {
 			is_valid() {
 				const has_customer = !!this.order.customer
@@ -65,6 +67,7 @@
 					createOrderAt,
 				}
 				const { data: _id } = await this.$axios.post('/order', saveData)
+				await this.loadData()
 				return { ...saveData, _id }
 			},
 			async makeOrder() {
