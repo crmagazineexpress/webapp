@@ -8,8 +8,9 @@
 			class="my-sticky-column-table"
 			hide-bottom
 			:pagination="{ rowsPerPage: 1000 }"
+			:visible-columns="visibleColumns"
 		>
-			<template v-slot:top-right>
+			<template v-if="!disabled" v-slot:top-right>
 				<add-products-input
 					@select="addProduct"
 					:exclude="data.map(({ id }) => id)"
@@ -17,12 +18,28 @@
 			</template>
 			<template v-slot:body-cell-qnt="props">
 				<q-td key="qnt" :props="props" style="width: 80px">
-					<manage-qnt-input v-model="props.row.qnt" />
+					<manage-qnt-input
+						v-if="!disabled"
+						v-model="props.row.qnt"
+					/>
+					<span v-else>{{ props.row.qnt }}</span>
 				</q-td>
 			</template>
 			<template v-slot:body-cell-sub_total="props">
 				<q-td key="sub_total" :props="props" style="width: 160px">
 					{{ money(props.row.qnt * props.row.price) }}
+				</q-td>
+			</template>
+			<template v-if="!disabled" v-slot:body-cell-trash="props">
+				<q-td key="trash" :props="props">
+					<q-btn
+						flat
+						icon="far fa-trash-alt"
+						round
+						color="negative"
+						size="sm"
+						@click="removeProduct(props.row.id)"
+					/>
 				</q-td>
 			</template>
 		</q-table>
@@ -78,6 +95,10 @@
 				type: Object,
 				default: () => {},
 			},
+			disabled: {
+				type: Boolean,
+				default: false,
+			},
 		},
 		data() {
 			return {
@@ -110,6 +131,10 @@
 						label: 'Sub. Total',
 						align: 'center',
 					},
+					{
+						name: 'trash',
+						align: 'center',
+					},
 				],
 				$wooApi: null,
 			}
@@ -122,6 +147,11 @@
 				set(products) {
 					this.$emit('update:order', { ...this.order, products })
 				},
+			},
+			visibleColumns() {
+				const colums = this.columns.map(({ name }) => name)
+				if (this.disabled) colums.splice(-1, 1)
+				return colums
 			},
 		},
 		methods: {
@@ -136,6 +166,10 @@
 					qnt: 1,
 					...product,
 				})
+			},
+			removeProduct(pid) {
+				const pIndex = this.data.findIndex(({ id }) => pid == id)
+				this.data.splice(pIndex, 1)
 			},
 		},
 	}
@@ -156,7 +190,7 @@
 		thead tr:first-child th:first-child {
 			background-color: #fff;
 		}
-		td:last-child {
+		td:nth-child(4) {
 			background-color: #f5f5dc;
 		}
 

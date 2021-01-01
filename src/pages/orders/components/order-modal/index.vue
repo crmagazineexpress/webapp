@@ -1,17 +1,25 @@
 <template>
-	<modal title="Pedido" v-model="openedModal" size="80%">
-		<order-modal-header :order.sync="order" />
+	<modal
+		title="Pedido"
+		:footer="!order.createOrderAt"
+		v-model="openedModal"
+		size="80%"
+	>
+		<order-modal-header
+			:order.sync="order"
+			:disabled="!!order.createOrderAt"
+		/>
 		<table-products
 			class="q-mt-lg"
 			:order.sync="order"
 			:order_summary="order_summary"
+			:disabled="!!order.createOrderAt"
 		/>
 		<installment-modal
 			ref="installmentMd"
 			:order.sync="order"
 			:order_summary="order_summary"
 		/>
-		<!-- <pre>{{ order }}</pre> -->
 		<template v-slot:actions>
 			<actions
 				:openInstMd="(ev) => $refs.installmentMd.open(ev)"

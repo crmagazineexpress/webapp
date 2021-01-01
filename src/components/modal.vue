@@ -12,7 +12,7 @@
 			<q-card-section style="background: rgb(248 248 248)">
 				<slot />
 			</q-card-section>
-			<q-card-actions align="right">
+			<q-card-actions v-if="footer" align="right">
 				<slot name="actions">
 					<div class="row q-col-gutter-md q-pa-sm cnt-actions-modal">
 						<div class="col-6">
@@ -70,6 +70,10 @@
 			disableSaveBtn: {
 				type: Boolean,
 				default: false,
+			},
+			footer: {
+				type: Boolean,
+				default: true,
 			},
 		},
 		methods: {

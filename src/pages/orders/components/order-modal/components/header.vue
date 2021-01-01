@@ -12,6 +12,7 @@
 					:use-input="!_order.customer"
 					@filter="filterFn"
 					v-model="_order.customer"
+					:disable="disabled"
 				>
 					<template v-slot:append>
 						<q-icon
@@ -31,6 +32,7 @@
 					map-options
 					option-value="id"
 					option-label="name"
+					:disable="disabled"
 					v-model="_order.payment_method"
 				/>
 			</div>
@@ -39,6 +41,7 @@
 					label="Data da compra"
 					type="date"
 					v-model="_order.date"
+					:disable="disabled"
 				/>
 			</div>
 			<div class="co-2">
@@ -47,6 +50,7 @@
 					mask="#.##"
 					reverse-fill-mask
 					v-model="_order.shipping"
+					:disable="disabled"
 				>
 					<template v-slot:prepend>
 						<q-icon name="local_shipping" />
@@ -71,6 +75,7 @@
 					label="Observações"
 					v-model="_order.obs"
 					autogrow
+					:disable="disabled"
 				/>
 			</div>
 		</div>
@@ -88,6 +93,10 @@
 			order: {
 				type: Object,
 				default: () => defaultOrder,
+			},
+			disabled: {
+				type: Boolean,
+				default: false,
 			},
 		},
 		data() {
