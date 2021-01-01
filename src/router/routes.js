@@ -3,9 +3,22 @@ const routes = [
 		path: '/',
 		component: () => import('layouts/MainLayout'),
 		children: [
-			{ path: '', component: () => import('pages/Index.vue') },
-			{ path: 'clientes', component: () => import('pages/customers') },
-			{ path: 'pedidos', component: () => import('pages/orders') },
+			{
+				path: '',
+				component: () => import('pages/Index.vue'),
+			},
+			{
+				path: 'clientes',
+				component: () => import('pages/customers'),
+			},
+			{
+				path: 'pedidos',
+				component: () => import('pages/orders'),
+			},
+			{
+				path: 'carnes',
+				component: () => import('pages/promissory-note'),
+			},
 		],
 	},
 

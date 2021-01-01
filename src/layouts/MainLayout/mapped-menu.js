@@ -27,6 +27,6 @@ export default [
 	{
 		title: 'Carnês',
 		icon: 'fas fa-file-invoice-dollar',
-		link: '/carne',
+		link: '/carnes',
 	},
 ]
