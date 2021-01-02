@@ -1,5 +1,5 @@
 <template>
-	<q-page class="q-py-md">
+	<div>
 		<!-- <q-btn
 			label="cliente"
 			icon="fas fa-plus"
@@ -7,26 +7,24 @@
 			class="q-mb-md"
 			@click="$refs.modal.open()"
 		/> -->
-		<div class="row q-pa-md">
-			<div class="col-9">
+		<div class="row q-mb-lg">
+			<div class="col-6">
 				<q-input
-					dense
-					outlined
+					filled
 					label="Pesquisar por nome, cpf, email"
 					v-model="filter"
 				/>
 			</div>
-			<div class="col text-right">
+			<!-- <div class="col text-right">
 				<q-btn
 					label="Novo cliente"
 					color="secondary"
 					class="q-mb-md"
 					@click="$refs.modal.open()"
 				/>
-			</div>
+			</div> -->
 		</div>
 		<q-table
-			class="no-shadow"
 			:data="filtered_list"
 			:columns="columns"
 			row-key="name"
@@ -98,7 +96,7 @@
 		</q-table>
 
 		<customer-modal ref="modal" />
-	</q-page>
+	</div>
 </template>
 
 <script>

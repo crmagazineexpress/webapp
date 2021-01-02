@@ -1,11 +1,17 @@
 <template>
 	<div>
-		<q-btn label="Novo" @click="$refs.orderMd.open()" />
-
-		<order-modal ref="orderMd" />
-
+		<div class="row q-mb-lg q-col-gutter-md">
+			<div class="col-6">
+				<q-input filled label="Cliente" />
+			</div>
+			<div class="col">
+				<q-select filled label="Forma de pagamento" />
+			</div>
+			<div class="col">
+				<q-select filled label="Status" />
+			</div>
+		</div>
 		<q-table
-			class="no-shadow"
 			:columns="columns"
 			:data="list"
 			:pagination="{ rowsPerPage: 50 }"
@@ -32,6 +38,7 @@
 				/>
 			</template>
 		</q-table>
+		<order-modal ref="orderMd" />
 	</div>
 </template>
 

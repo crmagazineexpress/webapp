@@ -7,13 +7,13 @@ const routes = [
 		path: '/',
 		component: () => import('layouts/MainLayout'),
 		children: [
-			{
-				path: '',
-				component: () => import('pages/Index.vue'),
-				meta: {
-					pageName: 'Dashboard',
-				},
-			},
+			// {
+			// 	path: '',
+			// 	component: () => import('pages/Index.vue'),
+			// 	meta: {
+			// 		pageName: 'Dashboard',
+			// 	},
+			// },
 			{
 				path: 'clientes',
 				component: () => import('pages/customers'),
@@ -22,7 +22,7 @@ const routes = [
 				},
 			},
 			{
-				path: 'pedidos',
+				path: '',
 				component: () => import('pages/orders'),
 				meta: {
 					pageName: 'Pedidos',

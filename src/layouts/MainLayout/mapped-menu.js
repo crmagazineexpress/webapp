@@ -1,13 +1,13 @@
 export default [
-	{
-		title: 'Dashboard',
-		icon: 'fas fa-tachometer-alt',
-		link: '/',
-	},
+	// {
+	// 	title: 'Dashboard',
+	// 	icon: 'fas fa-tachometer-alt',
+	// 	link: '/',
+	// },
 	{
 		title: 'Pedidos',
 		icon: 'fas fa-calculator',
-		link: '/pedidos',
+		link: '/',
 	},
 	{
 		title: 'Clientes',
