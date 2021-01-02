@@ -1,6 +1,23 @@
 <template>
-	<div class="row q-col-gutter-md q-pa-md">
+	<div class="row q-col-gutter-md">
 		<div class="col-8">
+			<div class="cnt-legend q-pb-lg">
+				<q-badge color="warning" label="Atrasado" />
+				<q-badge color="positive" label="Concluido" />
+				<q-badge color="info" label="Em dia" />
+			</div>
+
+			<!-- <q-card class="q-mb-lg">
+				</q-card-section>
+			</q-card> -->
+			<div class="row q-col-gutter-md q-mb-lg">
+				<div class="col-8">
+					<q-input filled label="Cliente" />
+				</div>
+				<div class="col">
+					<q-select filled label="Status" />
+				</div>
+			</div>
 			<grid-orders :list="list" v-model="selected" />
 		</div>
 		<div class="col">
@@ -55,4 +72,9 @@
 	}
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+	.cnt-legend {
+		display: flex;
+		gap: 8px;
+	}
+</style>

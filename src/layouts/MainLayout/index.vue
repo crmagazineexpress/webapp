@@ -30,8 +30,10 @@
 
 		<q-page-container class="bg-layout q-pt-xl">
 			<h4 class="text-grey-7 q-my-none q-px-lg">{{ pageName }}</h4>
-			<div class="q-pa-md">
-				<router-view />
+			<div class="q-ma-lg">
+				<div class="cnt-page">
+					<router-view />
+				</div>
 			</div>
 		</q-page-container>
 	</q-layout>
@@ -57,4 +59,9 @@
 		},
 	}
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+	.cnt-page {
+		display: block;
+		box-sizing: border-box;
+	}
+</style>

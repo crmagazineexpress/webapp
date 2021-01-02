@@ -1,10 +1,5 @@
 <template>
-	<q-table
-		:data="list"
-		:columns="columns"
-		class="no-shadow"
-		:pagination="{ rowsPerPage: 50 }"
-	>
+	<q-table :data="list" :columns="columns" :pagination="{ rowsPerPage: 50 }">
 		<template v-slot:body-cell-actions="props">
 			<q-td :props="props">
 				<q-btn
