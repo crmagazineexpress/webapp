@@ -10,3 +10,7 @@ export const FilterMoney = {
 		money,
 	},
 }
+
+export function DateBrl(v) {
+	return new Date(v).toLocaleDateString()
+}
