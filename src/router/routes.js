@@ -1,23 +1,39 @@
 const routes = [
 	{
+		path: '/login',
+		component: () => import('pages/login'),
+	},
+	{
 		path: '/',
 		component: () => import('layouts/MainLayout'),
 		children: [
 			{
 				path: '',
 				component: () => import('pages/Index.vue'),
+				meta: {
+					pageName: 'Dashboard',
+				},
 			},
 			{
 				path: 'clientes',
 				component: () => import('pages/customers'),
+				meta: {
+					pageName: 'Clientes',
+				},
 			},
 			{
 				path: 'pedidos',
 				component: () => import('pages/orders'),
+				meta: {
+					pageName: 'Pedidos',
+				},
 			},
 			{
 				path: 'carnes',
 				component: () => import('pages/promissory-note'),
+				meta: {
+					pageName: 'Carnês',
+				},
 			},
 		],
 	},

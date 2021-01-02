@@ -1,7 +1,7 @@
 <template>
-	<q-item :to="link" exact>
+	<q-item :to="link" exact active-class="bg-grey-1" class="border-active">
 		<q-item-section v-if="icon" avatar>
-			<q-icon :name="icon" size="20px" color="primary" />
+			<q-icon :name="icon" size="18px" color="black" />
 		</q-item-section>
 
 		<q-item-section>

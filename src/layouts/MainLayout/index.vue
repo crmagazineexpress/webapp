@@ -1,6 +1,6 @@
 <template>
-	<q-layout view="lHh Lpr lFf">
-		<q-header elevated>
+	<q-layout view="hHh Lpr lFf primary-layout">
+		<!-- <q-header elevated class="bg-white">
 			<q-toolbar>
 				<q-btn
 					flat
@@ -8,23 +8,18 @@
 					round
 					icon="menu"
 					aria-label="Menu"
+					color="primary"
 					@click="leftDrawerOpen = !leftDrawerOpen"
 				/>
-
-				<q-toolbar-title> Quasar App </q-toolbar-title>
 			</q-toolbar>
-		</q-header>
+		</q-header> -->
 
 		<q-drawer
 			v-model="leftDrawerOpen"
 			show-if-above
-			bordered
-			content-class="bg-grey-1"
+			content-class="bg-layout q-pt-xl"
 		>
 			<q-list>
-				<q-item-label header class="text-grey-8">
-					Modulos
-				</q-item-label>
 				<EssentialLink
 					v-for="link in MappedMenu"
 					:key="link.title"
@@ -33,8 +28,11 @@
 			</q-list>
 		</q-drawer>
 
-		<q-page-container>
-			<router-view />
+		<q-page-container class="bg-layout q-pt-xl">
+			<h4 class="text-grey-7 q-my-none q-px-lg">{{ pageName }}</h4>
+			<div class="q-pa-md">
+				<router-view />
+			</div>
 		</q-page-container>
 	</q-layout>
 </template>
@@ -52,5 +50,11 @@
 				MappedMenu,
 			}
 		},
+		computed: {
+			pageName() {
+				return this.$route.meta.pageName
+			},
+		},
 	}
 </script>
+<style lang="scss" scoped></style>

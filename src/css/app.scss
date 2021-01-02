@@ -1,1 +1,9 @@
 // app global css in SCSS form
+body, .bg-layout {
+	background-color: #eaeef3;
+}
+
+.border-active {
+	border-top-right-radius: 40px;
+    border-bottom-right-radius: 40px;
+}
