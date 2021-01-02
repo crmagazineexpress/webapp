@@ -1,19 +1,13 @@
 <template>
 	<div>
-		<div class="row q-mb-lg q-col-gutter-md">
-			<div class="col-6">
-				<q-input filled label="Cliente" />
-			</div>
-			<div class="col">
-				<q-select filled label="Forma de pagamento" />
-			</div>
-			<div class="col">
-				<q-select filled label="Status" />
-			</div>
-		</div>
+		<filter-orders
+			:customer.sync="filter.customer"
+			:paymentMethods.sync="filter.paymentMethods"
+			:status.sync="filter.status"
+		/>
 		<q-table
 			:columns="columns"
-			:data="list"
+			:data="filtered_list"
 			:pagination="{ rowsPerPage: 50 }"
 		>
 			<template v-slot:body-cell-payment="props">
@@ -39,6 +33,7 @@
 			</template>
 		</q-table>
 		<order-modal ref="orderMd" />
+		<!-- <button @click="$refs.orderMd.open()">...</button> -->
 	</div>
 </template>
 
@@ -47,6 +42,8 @@
 	import { money } from 'src/assets/helpers'
 	import ActionsTable from './components/actions-table.vue'
 	import BadgetsStatus from './components/badgets-status.vue'
+	import FilterOrders from './components/filter-orders.vue'
+	import { kebabCase } from 'lodash'
 
 	export default {
 		name: 'Orders',
@@ -54,6 +51,7 @@
 			orderModal,
 			ActionsTable,
 			BadgetsStatus,
+			FilterOrders,
 		},
 		data() {
 			return {
@@ -97,6 +95,11 @@
 				],
 
 				list: [],
+				filter: {
+					customer: '',
+					paymentMethods: null,
+					status: null,
+				},
 			}
 		},
 		provide() {
@@ -104,6 +107,34 @@
 				getAssets: () => this.assets,
 				loadData: this.loadDataHandler,
 			}
+		},
+		computed: {
+			filtered_list() {
+				let { customer, paymentMethods, status } = this.filter
+				customer = kebabCase(customer)
+
+				return this.list.filter(
+					({ createOrderAt, payment_method, customer: { nome } }) => {
+						const filterStatus =
+							status === null ||
+							(status === 0 && createOrderAt) ||
+							(status === 1 && !createOrderAt)
+
+						const filterPaymentMethods =
+							paymentMethods === null ||
+							payment_method == paymentMethods
+
+						const filterCustomer =
+							!customer || kebabCase(nome).indexOf(customer) != -1
+
+						return (
+							filterStatus &&
+							filterPaymentMethods &&
+							filterCustomer
+						)
+					}
+				)
+			},
 		},
 		methods: {
 			async loadAssets() {
