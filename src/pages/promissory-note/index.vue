@@ -1,24 +1,11 @@
 <template>
 	<div class="row q-col-gutter-md">
 		<div class="col-8">
-			<div class="cnt-legend q-pb-lg">
-				<q-badge color="warning" label="Atrasado" />
-				<q-badge color="positive" label="Concluido" />
-				<q-badge color="info" label="Em dia" />
-			</div>
-
-			<!-- <q-card class="q-mb-lg">
-				</q-card-section>
-			</q-card> -->
-			<div class="row q-col-gutter-md q-mb-lg">
-				<div class="col-8">
-					<q-input filled label="Cliente" />
-				</div>
-				<div class="col">
-					<q-select filled label="Status" />
-				</div>
-			</div>
-			<grid-orders :list="list" v-model="selected" />
+			<filter-promissory-note
+				:customer.sync="filter.customer"
+				:status.sync="filter.status"
+			/>
+			<grid-orders :list="filteredOrders" v-model="selected" />
 		</div>
 		<div class="col">
 			<grid-installments
@@ -30,18 +17,26 @@
 </template>
 
 <script>
+	import { kebabCase } from 'lodash'
 	import gridOrders from './components/grid-orders'
 	import GridInstallments from './components/grid-installments.vue'
+	import FilterPromissoryNote from './components/filter-promissory-note.vue'
+
 	export default {
 		name: 'PromissoryNote',
 		components: {
 			gridOrders,
 			GridInstallments,
+			FilterPromissoryNote,
 		},
 		data() {
 			return {
 				list: [],
 				selected: null,
+				filter: {
+					customer: '',
+					status: null,
+				},
 			}
 		},
 		provide() {
@@ -65,16 +60,28 @@
 				if (!this.selected) return null
 				return this.list.find(({ _id }) => _id == this.selected)
 			},
+			filteredOrders() {
+				const sanitizedName = kebabCase(this.filter.customer)
+				return this.list.filter(
+					({
+						customer: { nome },
+						installments_options: { status },
+					}) => {
+						const filterByName =
+							kebabCase(nome).indexOf(sanitizedName) != -1
+						const filterByStatus =
+							this.filter.status === null ||
+							(this.filter.status === 0 && status == 'late') ||
+							(this.filter.status === 1 && status == 'settled') ||
+							(this.filter.status === 2 && status == 'ok')
+
+						return filterByName && filterByStatus
+					}
+				)
+			},
 		},
 		mounted() {
 			this.loadDataHandler()
 		},
 	}
 </script>
-
-<style lang="scss" scoped>
-	.cnt-legend {
-		display: flex;
-		gap: 8px;
-	}
-</style>

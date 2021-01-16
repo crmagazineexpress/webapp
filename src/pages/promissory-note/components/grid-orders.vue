@@ -18,6 +18,25 @@
 				/>
 			</q-td>
 		</template>
+		<template v-slot:body-cell-status="props">
+			<q-td :props="props">
+				<q-badge
+					v-if="props.row.installments_options.status == 'late'"
+					color="warning"
+					label="Atrasado"
+				/>
+				<q-badge
+					v-if="props.row.installments_options.status == 'settled'"
+					color="positive"
+					label="Concluido"
+				/>
+				<q-badge
+					v-if="props.row.installments_options.status == 'ok'"
+					color="info"
+					label="Em dia"
+				/>
+			</q-td>
+		</template>
 	</q-table>
 </template>
 
@@ -42,6 +61,10 @@
 						label: 'Parcelamento',
 						field: this.xValueInstallmented,
 						align: 'left',
+					},
+					{
+						name: 'status',
+						label: 'Status',
 					},
 					{
 						name: 'instalments',

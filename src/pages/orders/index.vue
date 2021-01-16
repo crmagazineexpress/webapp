@@ -33,7 +33,7 @@
 			</template>
 		</q-table>
 		<order-modal ref="orderMd" />
-		<!-- <button @click="$refs.orderMd.open()">...</button> -->
+		<button @click="$refs.orderMd.open()">...</button>
 	</div>
 </template>
 
