@@ -162,6 +162,9 @@
 			},
 		},
 		methods: {
+			create() {
+				this.$refs.modal.open()
+			},
 			async loaddata() {
 				try {
 					const { data } = await this.$axios.get('/customers')

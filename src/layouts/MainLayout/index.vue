@@ -29,10 +29,21 @@
 		</q-drawer>
 
 		<q-page-container class="bg-layout q-pt-xl">
-			<h4 class="text-grey-7 q-my-none q-px-lg">{{ pageName }}</h4>
+			<h4 class="text-grey-7 q-my-none q-px-lg">
+				{{ pageName }}
+				<q-btn
+					v-if="createBtn"
+					icon="add"
+					@click="createHandle"
+					round
+					dense
+					flat
+					color="primary"
+				/>
+			</h4>
 			<div class="q-ma-lg">
 				<div class="cnt-page">
-					<router-view />
+					<router-view ref="page" />
 				</div>
 			</div>
 		</q-page-container>
@@ -52,9 +63,17 @@
 				MappedMenu,
 			}
 		},
+		methods: {
+			createHandle() {
+				if (this.$refs.page.create) this.$refs.page.create()
+			},
+		},
 		computed: {
 			pageName() {
 				return this.$route.meta.pageName
+			},
+			createBtn() {
+				return !this.$route.meta.hideCreateBtn
 			},
 		},
 	}

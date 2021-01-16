@@ -33,6 +33,7 @@ const routes = [
 				component: () => import('pages/promissory-note'),
 				meta: {
 					pageName: 'Carnês',
+					hideCreateBtn: true,
 				},
 			},
 		],

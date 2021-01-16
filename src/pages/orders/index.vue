@@ -33,7 +33,6 @@
 			</template>
 		</q-table>
 		<order-modal ref="orderMd" />
-		<button @click="$refs.orderMd.open()">...</button>
 	</div>
 </template>
 
@@ -137,6 +136,9 @@
 			},
 		},
 		methods: {
+			create() {
+				this.$refs.orderMd.open()
+			},
 			async loadAssets() {
 				try {
 					const customers = await this.$axios.get('/customers')
