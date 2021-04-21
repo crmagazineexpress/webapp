@@ -38,7 +38,7 @@
 			async deleteOrder() {
 				try {
 					this.loading = true
-					const { status } = await this.$axios.delete(
+					const { status } = await this.$api.delete(
 						`/order/${this.row._id}`
 					)
 					await this.loadData()

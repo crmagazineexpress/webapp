@@ -167,7 +167,7 @@
 			},
 			async loaddata() {
 				try {
-					const { data } = await this.$axios.get('/customers')
+					const { data } = await this.$api.get('/customers')
 					this.list = data
 				} catch (error) {
 					console.log(error)

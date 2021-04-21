@@ -66,7 +66,7 @@
 					installments_options,
 					createOrderAt,
 				}
-				const { data: _id } = await this.$axios.post('/order', saveData)
+				const { data: _id } = await this.$api.post('/order', saveData)
 				await this.loadData()
 				return { ...saveData, _id }
 			},

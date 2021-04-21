@@ -29,7 +29,7 @@
 			async send() {
 				try {
 					this.sending = true
-					await this.$axios.delete(`/customers/${this.id}`)
+					await this.$api.delete(`/customers/${this.id}`)
 					await this.loaddata()
 					this.sending = false
 				} catch (error) {}

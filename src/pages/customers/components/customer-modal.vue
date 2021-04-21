@@ -95,7 +95,7 @@
 			},
 			async save(res) {
 				try {
-					await this.$axios.post('/customers', this.form)
+					await this.$api.post('/customers', this.form)
 					await this.loaddata()
 					res(true)
 				} catch (error) {}

@@ -141,13 +141,13 @@
 			},
 			async loadAssets() {
 				try {
-					const customers = await this.$axios.get('/customers')
+					const customers = await this.$api.get('/customers')
 					this.assets.customers = customers.data
 				} catch (error) {}
 			},
 			async loadDataHandler() {
 				try {
-					const { data } = await this.$axios.get('/order')
+					const { data } = await this.$api.get('/order')
 					this.list = data
 				} catch (error) {}
 			},

@@ -33,7 +33,7 @@
 					].paid = paidStatus
 
 					// console.log(order)
-					await this.$axios.post('/order', order)
+					await this.$api.post('/order', order)
 					await this.loadData()
 					this.loading = false
 				} catch (error) {}

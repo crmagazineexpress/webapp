@@ -48,7 +48,7 @@
 		methods: {
 			async loadDataHandler() {
 				try {
-					const { data } = await this.$axios.get(
+					const { data } = await this.$api.get(
 						'/order/promissory-note'
 					)
 					this.list = data
